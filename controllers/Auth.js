@@ -12,7 +12,7 @@ exports.signup = async (req, res) => {
         //check if user exist already 
         const existingUser = await User.findOne({email});
         //if exist then return message already exist
-        if(existingUser){
+        if(existingUser){ 
             return res.status(400).json({
                 sucess: false,
                 message: 'User exist already',
@@ -50,7 +50,7 @@ exports.signup = async (req, res) => {
 };
 
 
-//Login Handler
+//Login Handler 
 exports.login = async (req, res) => {
     try {
         const {email, password} = req.body;
@@ -77,7 +77,7 @@ exports.login = async (req, res) => {
             id: user._id,
             role: user.role,
         }
-        // Verify password and generate jwt token
+        // Verify password then generate jwt token
         if(await bcrypt.compare(password, user.password)){
           let token = jwt.sign(payload, process.env.JWT_SECRET, {
             expiresIn: "3h",
@@ -89,13 +89,13 @@ exports.login = async (req, res) => {
           user.password = undefined;         // removing password from user object so that hacker cant get it
 
           const options = {
-            expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // aaj ki date se leke agle teen din tk milisecond me
+            expires: new Date(Date.now() + 20000), // 20 seconds timing for cookie expiring
 
             httpOnly: true, //It makes the cookie inaccessible to JavaScript running in the browser, enhancing security. 
           };
 
           //sending cookie in response with user and token
-          res.cookie("abhayToken", token, options).status(200).json({    //cookie(tokenName, value /data, options)
+          res.cookie("token", token, options).status(200).json({    //cookie(tokenName, value /data, options)
             success: true,
             token,
             user,

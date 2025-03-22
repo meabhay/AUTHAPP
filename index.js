@@ -4,12 +4,16 @@ const app = express();
 
 const PORT = process.env.PORT || 4000;
 
-app.use(express.json());
+const cookieParser = require("cookie-parser");        //cookie parser
+app.use(cookieParser());
 
+app.use(express.json());               //body parser
+
+//route mounting
 const user = require("./routes/user.js")
 app.use("/api/v1", user);
 
-const connectDB = require("./config/database.js");
+const connectDB = require("./config/database.js"); 
 connectDB();
 
 app.listen(PORT, () => {
